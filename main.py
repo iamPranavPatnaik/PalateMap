@@ -14,7 +14,3 @@ def search_column_a(search_value):
 # Example search value
 search_value = input()
 search_result = search_column_a(search_value)
-
-# Print each result row
-for row in search_result:
-    print(row[0], row[1])
