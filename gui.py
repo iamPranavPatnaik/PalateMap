@@ -2,34 +2,31 @@ import tkinter as tk
 from tkinter import messagebox
 
 class GUI:
-    # Function to display a message with the entered value
-    def __init__(self):
-        tk = Tk()
-        self.window = Tk()
+    def __init__(self, submit_callback):
+        self.root = tk.Tk()
+        self.root.title("PalateMap")
+        self.root.geometry("400x200")
+        self.user_input = None
+
+        # Set the callback function
+        self.submit_callback = submit_callback
+
+        label = tk.Label(self.root, text="Enter your preference:")
+        label.pack(pady=10)
+
+        self.entry = tk.Entry(self.root, width=50)
+        self.entry.pack(pady=10)
+
+        submit_button = tk.Button(self.root, text="Submit", command=self.return_dish)
+        submit_button.pack(pady=10)
 
     def return_dish(self):
-        user_input = entry.get()
-        messagebox.showinfo("Entered Value", f"You entered: {user_input}")
-        return user_input
+        self.user_input = self.entry.get()
+        if self.submit_callback:
+            self.submit_callback()  # Call the callback function
 
-    # Create the main window
-    root = tk.Tk()
-    root.title("PalateMap")
-
-    # Set the window size
-    root.geometry("400x200")
-
-    # Add a label for the entry box
-    label = tk.Label(root, text="Enter your preference:")
-    label.pack(pady=10)
-
-    # Add an entry box
-    entry = tk.Entry(root, width=50)
-    entry.pack(pady=10)
-
-    # Add a button to submit the entry
-    submit_button = tk.Button(root, text="Submit", command=return_dish)
-    submit_button.pack(pady=10)
+    def get_dish(self):
+        return self.user_input
 
     def run(self):
-        self.window.mainloop()
+        self.root.mainloop()

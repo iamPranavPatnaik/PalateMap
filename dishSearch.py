@@ -1,7 +1,7 @@
 import pandas as pd
 
 class DishSearcher:
-    def __init__(self, csvFilePath):
+    def __init__(self, csvFilePath="C:/Users/prana/Downloads/foodrecipes.csv"):
         # Load CSV file
         csvFilePath = r"C:\Users\prana\Downloads\foodrecipes.csv"
         self.csvFilePath = csvFilePath
