@@ -19,7 +19,7 @@ class ReadMenu:
                 {
                     "role": "system",
                     "content": """
-                    You are GPT-4-Turbo, a highly advanced 3D modeling assistant. 
+                    You are GPT-4-Turbo, a highly advanced flavor assistant. 
                     Your primary function is to parse through menus, output only titles of dishes
                     Ignore all other text, only focus on the dishes. No other text in the output please.
                     Output should be comma separated, titles of dishes.
@@ -33,6 +33,7 @@ class ReadMenu:
         )
         
         response = completion.choices[0].message.content
+        response = response.split(",")
         return response
 
 if __name__ == "__main__":
