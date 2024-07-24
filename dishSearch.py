@@ -1,9 +1,12 @@
 import pandas as pd
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 class DishSearcher:
-    def __init__(self, csvFilePath="C:/Users/prana/Downloads/foodrecipes.csv"):
+    def __init__(self, csvFilePath=None):
         # Load CSV file
-        csvFilePath = r"C:\Users\prana\Downloads\foodrecipes.csv"
+        csvFilePath = os.getenv("RECIPE_DATASET_PATH")
         self.csvFilePath = csvFilePath
 
     # Returns ingredients

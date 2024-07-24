@@ -1,11 +1,14 @@
 from openai import OpenAI
 from dishSearch import DishSearcher
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class FlavorEvaluator:
     def __init__(self):
         # Initialize the OpenAI client and DishSearcher here
-        self.client = OpenAI()
-        self.searcher = DishSearcher("C:/Users/prana/Downloads/foodrecipes.csv")
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.searcher = DishSearcher(os.getenv("RECIPE_DATASET_PATH"))
 
     def evaluateFlavor(self, ingredients, recipe):
         completion = self.client.chat.completions.create(
