@@ -28,22 +28,6 @@ class OCRMenu:
             r = requests.post('https://api.ocr.space/parse/image', files={filename: f}, data=payload)
         return r.content.decode()
 
-    def ocr_space_url(self, url, overlay=False, language='eng'):
-        """ OCR.space API request with remote file.
-        :param url: Image url.
-        :param overlay: Is OCR.space overlay required in your response. Defaults to False.
-        :param language: Language code to be used in OCR. Defaults to 'eng'.
-        :return: Result in JSON format.
-        """
-        payload = {
-            'url': url,
-            'isOverlayRequired': overlay,
-            'apikey': self.api_key,
-            'language': language,
-        }
-        r = requests.post('https://api.ocr.space/parse/image', data=payload)
-        return r.content.decode()
-
     def parse_menu_file(self, filename):
         """ Parse the menu file and return the parsed text.
         :param filename: Your file path & name.
@@ -54,6 +38,6 @@ class OCRMenu:
         return response_json["ParsedResults"][0]["ParsedText"]
 
 if __name__ == "__main__":
-    ocr = OCRMenu(api_key='K87609404488957')
+    ocr = OCRMenu(api_key=os.getenv("OCR_API_KEY"))
     menu_text = ocr.parse_menu_file(filename=r"C:\Users\prana\Downloads\menuexample.png")
     print(menu_text)
