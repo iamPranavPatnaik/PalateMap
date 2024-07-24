@@ -21,7 +21,7 @@ class Main:
             messagebox.showwarning("Input Error", "Please enter a dish name.")
 
 def startPalateMap():
-    main = Main()  # Create a single Main instance
+    main = Main() 
     main.gui.run()  # Run the GUI loop
 
 startPalateMap()
