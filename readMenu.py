@@ -33,7 +33,7 @@ class ReadMenu:
         )
         
         response = completion.choices[0].message.content
-        print(response)
+        return response
 
 if __name__ == "__main__":
     menuEvaluator = ReadMenu()
