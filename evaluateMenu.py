@@ -16,7 +16,7 @@ class MenuEvaluator:
         for dish in user_menu:
             dish_vector = evalFlavor.evaluateFlavor(dish)
             dish_vectors.append(dish_vector)
-        
+
         return dish_vectors
 
 if __name__ == "__main__":

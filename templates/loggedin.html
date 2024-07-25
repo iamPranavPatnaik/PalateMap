@@ -66,22 +66,27 @@
       margin-top: 10px;
       color: green;
     }
-    .main-buttons {
-      display: flex;
-      flex-direction: column;
-    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1 class="text-center mb-4">PalateMap</h1>
-  <div class="main-buttons">
-    <a href="/login" class="btn btn-primary">Login</a>
-    <a href="/register" class="btn btn-secondary">Register</a>
-  </div>
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label class="custom-label" for="fileInput">Take a Photo</label>
+      <input type="file" class="form-control-file" name="file" id="fileInput" accept="image/*" capture="camera" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+    <p class="hidden-text" id="menuUpdatedText">Menu Updated</p>
+  </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  document.getElementById('fileInput').addEventListener('change', function() {
+    document.getElementById('menuUpdatedText').style.display = 'block';
+  });
+</script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>PalateMap</title>
+  <title>Register - PalateMap</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
@@ -20,7 +20,6 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
     }
     .btn-primary {
       width: 100%;
@@ -33,52 +32,31 @@
       background-color: #ff8000;
       border-color: #ff7300;
     }
-    .btn-secondary {
-      width: 100%;
-      margin-top: 15px;
-      background-color: white;
-      color: #ff7300;
-      border: 2px solid #ff8000;
+    .form-group {
+      margin-bottom: 15px;
     }
-    .btn-secondary:hover {
-      background-color: #ff7300;
-      color: white;
-    }
-    #fileInput {
-      display: none;
-    }
-    .custom-label {
-      display: inline-block;
-      width: 100%;
-      background-color: white;
-      color: #ff7300;
-      padding: 10px;
+    .form-control {
       border-radius: 5px;
-      border: 2px solid #ff8000;
-      cursor: pointer;
     }
-    .custom-label:hover {
-      background-color: #ff7300;
-      color: white;
-    }
-    .hidden-text {
-      display: none;
-      margin-top: 10px;
-      color: green;
-    }
-    .main-buttons {
-      display: flex;
-      flex-direction: column;
+    .text-center {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1 class="text-center mb-4">PalateMap</h1>
-  <div class="main-buttons">
-    <a href="/login" class="btn btn-primary">Login</a>
-    <a href="/register" class="btn btn-secondary">Register</a>
-  </div>
+  <h1 class="text-center">Register</h1>
+  <form method="post">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Register Now!</button>
+  </form>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
