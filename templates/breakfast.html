@@ -18,13 +18,17 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       margin-top: 40px;
     }
+    .list-group {
+      max-height: 400px;
+      overflow-y: auto;
+    }
     .list-group-item {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
       background-color: #fff8e1; /* Light yellow */
-      border: 1px solid #ff7300; /* Match button color */
+      border: 1px solid #ff7300; /* Orange border */
       border-radius: 5px;
       margin-bottom: 15px;
       padding: 15px;
@@ -34,7 +38,8 @@
       font-size: 1.2em;
     }
     .item-date,
-    .item-rating {
+    .item-rating,
+    .item-notes {
       font-size: 0.9em;
       color: #666;
     }
@@ -54,83 +59,90 @@
       <li class="list-group-item">
         <div class="item-title">Waffles</div>
         <div class="item-date">Date: 2024-07-13</div>
-        <div class="item-rating">Rating: 5.5/10</div>
-        <div class="item-rating">Personal Notes: Way too sweet! Syrup is not something that I like.</div>
-
+        <div class="item-rating">Rating: 8.5/10</div>
+        <div class="item-notes">Personal Notes: Perectly sweet. Syrup had just the right punch</div>
       </li>
       <li class="list-group-item">
         <div class="item-title">Poached Eggs</div>
         <div class="item-date">Date: 2024-07-24</div>
-        <div class="item-rating">My Rating: 9/10</div>
-        <div class="item-rating">Personal Notes: Almost perfectly made, I seem to like eggs.</div>
+        <div class="item-rating">Rating: 9/10</div>
+        <div class="item-notes">Personal Notes: Almost perfectly made, I seem to like eggs.</div>
       </li>
     </ul>
-    <button id="add-item" class="btn btn-primary btn-block mt-4">Add New Listing</button>
+    <button id="add-item" class="btn btn-primary btn-block mt-4" data-toggle="modal" data-target="#addItemModal">Add New Listing</button>
   </div>
 
-  <!-- Include Firebase JavaScript SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <!-- Modal -->
+  <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addItemModalLabel">Add New Breakfast Listing</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addItemForm">
+            <div class="form-group">
+              <label for="itemName">Item Name</label>
+              <input type="text" class="form-control" id="itemName" required>
+            </div>
+            <div class="form-group">
+              <label for="itemDate">Date</label>
+              <input type="date" class="form-control" id="itemDate" required>
+            </div>
+            <div class="form-group">
+              <label for="itemRating">Rating</label>
+              <input type="number" class="form-control" id="itemRating" min="1" max="10" required>
+            </div>
+            <div class="form-group">
+              <label for="itemNotes">Personal Notes</label>
+              <textarea class="form-control" id="itemNotes" rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveItemButton">Save Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- Import your Firebase config -->
-  <script type="module" src="firebase-config.js"></script>
-
-  <script type="module">
-    import { db, auth } from './firebase-config.js';
-
-    document.addEventListener('DOMContentLoaded', async function() {
-      const user = auth.currentUser;
-      if (!user) {
-        alert('Please log in first.');
-        window.location.href = '/login';
-        return;
-      }
-
-      const userId = user.uid;
+  <!-- JavaScript to handle adding new listings -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
       const breakfastList = document.getElementById('breakfast-list');
-      const addItemButton = document.getElementById('add-item');
+      const addItemForm = document.getElementById('addItemForm');
+      const saveItemButton = document.getElementById('saveItemButton');
 
-      // Fetch and display breakfast listings
-      const querySnapshot = await db.collection('users').doc(userId).collection('breakfast').get();
-      querySnapshot.forEach(doc => {
-        const item = doc.data();
-        const listItem = document.createElement('li');
-        listItem.className = 'list-group-item';
-        listItem.innerHTML = `
-          <div class="item-title">${item.name}</div>
-          <div class="item-date">Date: ${new Date(item.date).toLocaleDateString()}</div>
-          <div class="item-rating">Rating: ${item.rating}/5</div>
-        `;
-        breakfastList.appendChild(listItem);
-      });
+      saveItemButton.addEventListener('click', function() {
+        const newItemName = document.getElementById('itemName').value;
+        const newItemDate = document.getElementById('itemDate').value;
+        const newItemRating = document.getElementById('itemRating').value;
+        const newItemNotes = document.getElementById('itemNotes').value;
 
-      // Add new listing
-      addItemButton.addEventListener('click', async function() {
-        const newItem = prompt('Enter new breakfast listing:');
-        const newRating = prompt('Enter rating for the item (1-5):');
-        const dateLogged = new Date().toISOString();
-
-        if (newItem && newRating) {
-          const docRef = await db.collection('users').doc(userId).collection('breakfast').add({
-            name: newItem,
-            date: dateLogged,
-            rating: newRating
-          });
+        if (newItemName && newItemDate && newItemRating) {
           const listItem = document.createElement('li');
           listItem.className = 'list-group-item';
           listItem.innerHTML = `
-            <div class="item-title">${newItem}</div>
-            <div class="item-date">Date: ${new Date(dateLogged).toLocaleDateString()}</div>
-            <div class="item-rating">Rating: ${newRating}/5</div>
+            <div class="item-title">${newItemName}</div>
+            <div class="item-date">Date: ${newItemDate}</div>
+            <div class="item-rating">Rating: ${newItemRating}/10</div>
+            <div class="item-notes">Personal Notes: ${newItemNotes}</div>
           `;
           breakfastList.appendChild(listItem);
+          $('#addItemModal').modal('hide');
+          addItemForm.reset();
+        } else {
+          alert('Please fill out all required fields.');
         }
       });
     });
   </script>
 
-  <!-- Scripts -->
+  <!-- Bootstrap JS, Popper.js, and jQuery -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
