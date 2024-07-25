@@ -9,18 +9,13 @@ class RankMenu:
 
     def findDistance(self, userVector, menuVector):
         difference_list = list()
-        print(type(menuVector))
-        # Find component difference
         for i in range(len(userVector)):
-            difference = userVector[i] - menuVector[i]
+            difference = (userVector[i] - menuVector[i])**2
             difference_list.append(difference)
         
         # Find distance
-        sum = 0
-        for j in difference_list:
-            sum += j**2
-        
-        distance = math.sqrt(sum) 
+        distance = math.sqrt(sum(difference_list))
+        print(menuVector)
         return distance
 
     def rankMenu(self, userVector, menuDict):
@@ -29,7 +24,8 @@ class RankMenu:
             distance = self.findDistance(userVector, dishVector)
             dishDistance[dish] = distance
 
-        rankedMenu = sorted(dishDistance)
+        rankedMenu = sorted(dishDistance.items(), key=lambda item: item[1])
+        rankedDishes = [dish for dish, distance in rankedMenu]
         return rankedMenu
 
 if __name__ == "__main__":
@@ -41,4 +37,7 @@ if __name__ == "__main__":
     
     menuRanker = RankMenu()
     user_vector = [3, 4, 6, 2, 8, 9]
+    desert_vector = [8,2,8,0,10,3]
+
+    menuRanker.rankMenu(desert_vector, dish_dict)
     menuRanker.rankMenu(user_vector, dish_dict)
