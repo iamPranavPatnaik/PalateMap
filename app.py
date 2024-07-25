@@ -109,6 +109,10 @@ def homepage():
 def userprofile():
     return render_template('userprofile.html')
 
+@app.route('/breakfast')
+def breakfast():
+    return render_template('breakfast.html')
+
 @app.route('/result')
 def result():
     return render_template('result.html')
