@@ -3,6 +3,7 @@ from flask import Flask, request, redirect, url_for, render_template, flash
 from werkzeug.utils import secure_filename
 from PIL import Image
 import pytesseract
+from rankDish import RankMenu
 from evaluateMenu import MenuEvaluator
 from readMenu import ReadMenu
 import firebase_admin
@@ -41,10 +42,17 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            
             file.save(filepath)
-            readMenu = ReadMenu()
             eval_menu = MenuEvaluator()
-            dish_vectors = eval_menu.evaluate_menu(filepath)
+            dish_dict = eval_menu.evaluate_menu(filepath)
+
+            # Rank all dishes based on vector distances
+            menuRanker = RankMenu()
+            user_vector = [3, 4, 6, 2, 8, 9]
+            menuRanker.rankMenu(user_vector, dish_dict)
+
             return render_template('result.html', text=dish_vectors, image_url=filepath)  # Update as needed
     return render_template('index.html')
 

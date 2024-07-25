@@ -30,7 +30,7 @@ class RankMenu:
             dishDistance[dish] = distance
 
         rankedMenu = sorted(dishDistance)
-        print(rankedMenu)
+        return rankedMenu
 
 if __name__ == "__main__":
     eval_menu = MenuEvaluator()
