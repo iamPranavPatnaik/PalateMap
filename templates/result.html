@@ -6,6 +6,22 @@
   <title>Menu Evaluation Results</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: url("/static/images/background.png") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
     .dish-container {
       display: flex;
       align-items: center;
@@ -17,7 +33,6 @@
     .dish-img {
       width: 50px;
       height: 50px;
-      background-color: #ccc;
       border-radius: 5px;
       margin-right: 10px;
     }
@@ -27,10 +42,6 @@
       background-color: #f8f9fa;
       border-radius: 5px;
       text-align: left;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
     }
     .scrollable {
       max-height: 400px;
@@ -42,11 +53,11 @@
 <body>
   <div class="container">
     <h1 class="text-center mb-4">Menu Evaluation Results</h1>
-    <img src="{{ image_url }}" alt="Uploaded Image" class="img-fluid mb-4">
     <div class="scrollable">
+      {% set images = ['defaultpic1.jpg', 'defaultpic2.png', 'defaultpic3.png', 'defaultpic4.png', 'defaultpic5.png'] %}
       {% for dish, score in text %}
       <div class="dish-container">
-        <div class="dish-img"></div>
+        <img src="{{ url_for('static', filename='images/' ~ images[(loop.index0 % images|length)]) }}" alt="Dish Image" class="dish-img">
         <div class="dish-title">{{ dish }}</div>
       </div>
       {% endfor %}
