@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>User Profile</title>
+  <title>PalateMap</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       background: url("/static/images/background.png") no-repeat center center fixed;
       background-size: cover;
     }
@@ -24,10 +25,45 @@
     }
     .btn-primary {
       width: 100%;
-      margin-top: 15px;
+      margin-top: 5px;
       background-color: #ff7300;
-      border: none;
+      color: white;
+      border: 2px solid #ff8000;
     }
+    .btn-primary:hover {
+      background-color: #ff8000;
+      border-color: #ff7300;
+    }
+    .btn-secondary {
+      width: 100%;
+      margin-top: 10px;
+      background-color: white;
+      color: #ff7300;
+      border: 2px solid #ff8000;
+    }
+    .btn-secondary:hover {
+      background-color: #ff7300;
+      color: white;
+    }
+    #fileInput {
+      display: none;
+    }
+    .custom-label {
+      display: inline-block;
+      width: 100%;
+      background-color: white;
+      color: #ff7300;
+      padding: 10px;
+      border-radius: 5px;
+      border: 2px solid #ff8000;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    .custom-label:hover {
+      background-color: #ff7300;
+      color: white;
+    }
+
     .navbar {
       display: flex;
       justify-content: center;
@@ -37,6 +73,7 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.9); /* Slightly transparent background */
       box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1000; /* Ensure the navbar is on top */
     }
     .navbar .nav-link {
       font-size: 24px;
@@ -51,26 +88,40 @@
     .navbar .nav-link:hover {
       color: #ff4d00;
     }
+    
+    .hidden-text {
+      display: none;
+      margin-top: 10px;
+      color: green;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="text-center mb-4">User Profile</h1>
-    <button class="btn btn-primary">Breakfast</button>
-    <button class="btn btn-primary">Lunch</button>
-    <button class="btn btn-primary">Dinner</button>
-    <button class="btn btn-primary">Dessert</button>
-  </div>
-
   <!-- Navigation bar -->
   <nav class="navbar">
     <a class="nav-link" href="/homepage">🏠</a>
     <a class="nav-link" href="/userprofile">👤</a>
   </nav>
+  
+  <div class="container">
+    <h1 class="text-center mb-4">PalateMap</h1>
+    <form method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="custom-label" for="fileInput">Take Photo of Menu</label>
+        <input type="file" class="form-control-file" name="file" id="fileInput" accept="image/*" capture="camera" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Upload Photo</button>
+      <p class="hidden-text" id="menuUpdatedText">Menu Updated</p>
+    </form>
+  </div>
 
-  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function() {
+      document.getElementById('menuUpdatedText').style.display = 'block';
+    });
+  </script>
 </body>
 </html>

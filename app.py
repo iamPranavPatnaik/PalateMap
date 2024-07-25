@@ -43,10 +43,9 @@ def upload_file():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
             readMenu = ReadMenu()
-            # user_menu = readMenu.parseMenu(menu)
             eval_menu = MenuEvaluator()
             dish_vectors = eval_menu.evaluate_menu(filepath)
-            return render_template('result.html', text=dish_vectors, image_url=filepath) # CHANGE THIS CHANGE THIS CHANGE THIS
+            return render_template('result.html', text=dish_vectors, image_url=filepath)  # Update as needed
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,7 +62,7 @@ def login():
             
             user = auth.get_user_by_email(email)
             flash("Login successful!", "success")
-            return redirect(url_for('loggedin'))  # Redirect to loggedin page after login
+            return redirect(url_for('userprofile'))  # Redirect to user profile after login
         
         except ValueError as ve:
             flash(f"Input Error: {str(ve)}", "danger")
@@ -97,9 +96,17 @@ def register():
             flash(f"Registration failed: {str(e)}", "danger")
     return render_template('register.html')
 
-@app.route('/loggedin')
-def loggedin():
-    return render_template('loggedin.html')
+@app.route('/homepage')
+def homepage():
+    return render_template('homepage.html')
+
+@app.route('/userprofile')
+def userprofile():
+    return render_template('userprofile.html')
+
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
