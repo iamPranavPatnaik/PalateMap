@@ -28,14 +28,25 @@ class OCRMenu:
             r = requests.post('https://api.ocr.space/parse/image', files={filename: f}, data=payload)
         return r.content.decode()
 
-    def parse_menu_file(self, filename):
-        """ Parse the menu file and return the parsed text.
-        :param filename: Your file path & name.
-        :return: Parsed text from the image.
-        """
-        response = self.ocr_space_file(filename, language='eng')
-        response_json = json.loads(response)
-        return response_json["ParsedResults"][0]["ParsedText"]
+    def parse_menu_file(self, menu_file):
+        url = "https://api.ocr.space/parse/image"
+        headers = {"apikey": self.api_key}  # Replace with your actual API key
+
+        with open(menu_file, 'rb') as file:
+            response = requests.post(url, headers=headers, files={'file': file})
+        
+        response_json = response.json()
+        
+        # Check for 'ParsedResults' in the response
+        if 'ParsedResults' in response_json:
+            parsed_results = response_json['ParsedResults']
+            if parsed_results:
+                return parsed_results[0].get("ParsedText", "No text found")
+            else:
+                return "No parsed results found"
+        else:
+            return "OCR response does not contain 'ParsedResults' key"
+
 
 if __name__ == "__main__":
     ocr = OCRMenu(api_key=os.getenv("OCR_API_KEY"))

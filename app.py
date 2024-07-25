@@ -3,7 +3,7 @@ from flask import Flask, request, redirect, url_for, render_template, flash
 from werkzeug.utils import secure_filename
 from PIL import Image
 import pytesseract
-from rankDish import RankMenu
+from rankMenu import RankMenu
 from evaluateMenu import MenuEvaluator
 from readMenu import ReadMenu
 import firebase_admin
@@ -86,24 +86,37 @@ def homepage():
         if 'file' not in request.files:
             flash("No file part", "danger")
             return redirect(request.url)
+        
         file = request.files['file']
         if file.filename == '':
             flash("No selected file", "danger")
             return redirect(request.url)
+        
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
 
-            eval_menu = MenuEvaluator()
-            dish_dict = eval_menu.evaluate_menu(filepath)
+            try:
+                eval_menu = MenuEvaluator()
+                dish_dict = eval_menu.evaluate_menu(filepath)
+                
+                # Assuming you have a function or class to rank the menu
+                menuRanker = RankMenu()
+                user_vector = [3, 4, 6, 2, 8, 9]
+                rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
 
-            menuRanker = RankMenu()
-            user_vector = [3, 4, 6, 2, 8, 9]
-            rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
+                return render_template('result.html', text=rankedMenu, image_url=filepath)
+            except Exception as e:
+                print(f"Error processing file: {e}")
+                flash("An error occurred while processing the file.", "danger")
+                return redirect(request.url)
 
-            return render_template('result.html', text=rankedMenu, image_url=filepath)
     return render_template('homepage.html')
+
+def allowed_file(filename):
+    # Check for allowed file extensions
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'jpg', 'jpeg', 'png'}
 
 @app.route('/userprofile')
 def userprofile():

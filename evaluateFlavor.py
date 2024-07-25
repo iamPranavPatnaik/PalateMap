@@ -28,7 +28,7 @@ class FlavorEvaluator:
                     Be sensitive about the number, don't merely put 10 and call it a day.
                     If ingredients are unclear, make an educated guess and leave it as that. For instance, if your final scores are "0, 0, 0, 0, 0, 0" please leave a guess based on educated resources. Thank you.
                     IMPORTANT: NEVER leave a final score with primarily "0s." (ex: 0, 0, 0, 0, 0, 0). All dishes have some sort of variety, 0s merely decrease the proficiency of our program. Thank you. 
-                    Format the answer as just 6 numbers, the score for each category, no other text,
+                    Format the answer as just 6 numbers, the score for each category, no other text.
                     """
                 },
                 {
