@@ -9,11 +9,16 @@ from readMenu import ReadMenu
 import firebase_admin
 from firebase_admin import credentials, auth
 
-UPLOAD_FOLDER = 'static/uploads'
+# Define the upload folder
+UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Ensure the upload directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate('palatemapfirebase.json')
@@ -83,42 +88,26 @@ def register():
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            flash("No file part", "danger")
-            return redirect(request.url)
-        
-        file = request.files['file']
-        if file.filename == '':
-            flash("No selected file", "danger")
-            return redirect(request.url)
-        
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-
-            try:
-                read_menu = ReadMenu()
-                print(read_menu.parseMenu(filepath))
-
-                eval_menu = MenuEvaluator()
-                dish_dict = eval_menu.evaluate_menu(filepath)
-
-                menuRanker = RankMenu()
-                user_vector = [3, 4, 6, 2, 8, 9]
-                rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
-
-                return render_template('result.html', text=rankedMenu, image_url=filepath)
-            except Exception as e:
-                print(f"Error processing file: {e}")
-                flash("An error occurred while processing the file.", "danger")
-                return redirect(request.url)
-
+        if 'file_camera' in request.files:
+            file_camera = request.files['file_camera']
+            if file_camera.filename != '':
+                file_camera.save(f'static/uploads/{file_camera.filename}')
+                print(f"Saved camera file: {file_camera.filename}")
+                
+        if 'file_library' in request.files:
+            file_library = request.files['file_library']
+            if file_library.filename != '':
+                file_library.save(f'static/uploads/{file_library.filename}')
+                print(f"Saved library file: {file_library.filename}")
+                
+        return redirect(url_for('result'))
     return render_template('homepage.html')
 
 def allowed_file(filename):
     # Check for allowed file extensions
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'jpg', 'jpeg', 'png'}
+
+
 
 @app.route('/breakfast')
 def breakfast():

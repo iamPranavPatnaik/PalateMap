@@ -44,10 +44,10 @@
       background-color: #ff7300;
       color: white;
     }
-    #fileInput {
+    #fileInput, #fileInputLibrary {
       display: none;
     }
-    .custom-label {
+    .custom-label, .custom-label-library {
       display: inline-block;
       width: 100%;
       background-color: white;
@@ -57,8 +57,9 @@
       border: 2px solid #ff8000;
       margin-top: 15px;
       cursor: pointer;
+      text-align: center;
     }
-    .custom-label:hover {
+    .custom-label:hover, .custom-label-library:hover {
       background-color: #ff7300;
       color: white;
     }
@@ -107,9 +108,13 @@
     <form method="post" enctype="multipart/form-data" action="/homepage">
       <div class="form-group">
         <label class="custom-label" for="fileInput">Take Photo of Menu</label>
-        <input type="file" class="form-control-file" name="file" id="fileInput" accept="image/*" capture="camera" required>
+        <input type="file" class="form-control-file" name="file_camera" id="fileInput" accept="image/*" capture="camera">
       </div>
-      <button type="submit" class="btn btn-primary">Upload Photo</button>
+      <div class="form-group">
+        <label class="custom-label-library" for="fileInputLibrary">Upload Photo from Library</label>
+        <input type="file" class="form-control-file" name="file_library" id="fileInputLibrary" accept="image/*">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Photo</button>
       <p class="hidden-text" id="menuUpdatedText">Menu Updated</p>
     </form>
   </div>
@@ -119,6 +124,9 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     document.getElementById('fileInput').addEventListener('change', function() {
+      document.getElementById('menuUpdatedText').style.display = 'block';
+    });
+    document.getElementById('fileInputLibrary').addEventListener('change', function() {
       document.getElementById('menuUpdatedText').style.display = 'block';
     });
   </script>
