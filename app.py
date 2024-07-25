@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 import pytesseract
 from evaluateMenu import MenuEvaluator
+from readMenu import ReadMenu
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -32,8 +33,11 @@ def upload_file():
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
-            text = perform_ocr(filepath)
-            return render_template('result.html', text=text, image_url=filepath)
+            readMenu = ReadMenu()
+            user_menu = readMenu.parseMenu(menu)
+            eval_menu = MenuEvaluator()
+            dish_vectors = eval_menu.evaluate_menu(filepath)
+            return render_template('result.html', text=dish_vectors, image_url=filepath) # CHANGE THIS CHANGE THIS CHANGE THIS
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
