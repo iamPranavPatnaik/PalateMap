@@ -5,12 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Menu Evaluation Results</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .dish-container {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .dish-img {
+      width: 50px;
+      height: 50px;
+      background-color: #ccc;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .dish-title {
+      flex-grow: 1;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      text-align: left;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    .scrollable {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1 class="text-center mb-4">Menu Evaluation Results</h1>
-    <img src="{{ image_url }}" alt="Uploaded Image" class="img-fluid">
-    <pre>{{ text }}</pre>
+    <img src="{{ image_url }}" alt="Uploaded Image" class="img-fluid mb-4">
+    <div class="scrollable">
+      {% for dish, score in text %}
+      <div class="dish-container">
+        <div class="dish-img"></div>
+        <div class="dish-title">{{ dish }}</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
