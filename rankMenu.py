@@ -4,6 +4,9 @@ from readMenu import ReadMenu
 from evaluateMenu import MenuEvaluator 
 
 class RankMenu:
+    def __init__(self):
+        pass
+
     def findDistance(self, userVector, menuVector):
         difference_list = list()
         for i in range(len(userVector)):
