@@ -2,8 +2,8 @@ from gui import GUI
 from evaluateFlavor import FlavorEvaluator
 from dishSearch import DishSearcher
 from tkinter import messagebox
-from loginPage import LoginPage
-from registrationPage import RegistrationPage
+from old.loginPage import LoginPage
+from old.registrationPage import RegistrationPage
 
 class Main:
     def __init__(self, user_id):
