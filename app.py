@@ -98,11 +98,11 @@ def homepage():
             file.save(filepath)
 
             try:
-                eval_menu = MenuEvaluator()
-                dish_dict = eval_menu.evaluate_menu(filepath)
-
                 read_menu = ReadMenu()
                 print(read_menu.parseMenu(filepath))
+
+                eval_menu = MenuEvaluator()
+                dish_dict = eval_menu.evaluate_menu(filepath)
 
                 menuRanker = RankMenu()
                 user_vector = [3, 4, 6, 2, 8, 9]
