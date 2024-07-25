@@ -88,19 +88,52 @@ def register():
 @app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
     if request.method == 'POST':
+        # Handle file upload from camera
         if 'file_camera' in request.files:
             file_camera = request.files['file_camera']
-            if file_camera.filename != '':
-                file_camera.save(f'static/uploads/{file_camera.filename}')
-                print(f"Saved camera file: {file_camera.filename}")
-                
+            if file_camera.filename != '' and allowed_file(file_camera.filename):
+                filename = secure_filename(file_camera.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file_camera.save(filepath)
+                print(f"Saved camera file: {filename}")
+                # Process the file and get results
+                try:
+                    eval_menu = MenuEvaluator()
+                    dish_dict = eval_menu.evaluate_menu(filepath)
+
+                    menuRanker = RankMenu()
+                    user_vector = [3, 4, 6, 2, 8, 9]
+                    rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
+
+                    return render_template('result.html', text=rankedMenu, image_url=filepath)
+                except Exception as e:
+                    print(f"Error processing file: {e}")
+                    flash("An error occurred while processing the file.", "danger")
+                    return redirect(request.url)
+
+        # Handle file upload from library
         if 'file_library' in request.files:
             file_library = request.files['file_library']
-            if file_library.filename != '':
-                file_library.save(f'static/uploads/{file_library.filename}')
-                print(f"Saved library file: {file_library.filename}")
-                
-        return redirect(url_for('result'))
+            if file_library.filename != '' and allowed_file(file_library.filename):
+                filename = secure_filename(file_library.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file_library.save(filepath)
+                print(f"Saved library file: {filename}")
+                # Process the file and get results
+                try:
+                    eval_menu = MenuEvaluator()
+                    dish_dict = eval_menu.evaluate_menu(filepath)
+
+                    menuRanker = RankMenu()
+                    user_vector = [3, 4, 6, 2, 8, 9]
+                    rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
+
+                    return render_template('result.html', text=rankedMenu, image_url=filepath)
+                except Exception as e:
+                    print(f"Error processing file: {e}")
+                    flash("An error occurred while processing the file.", "danger")
+                    return redirect(request.url)
+
     return render_template('homepage.html')
 
 def allowed_file(filename):
