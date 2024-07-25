@@ -24,7 +24,7 @@
     }
     .btn-primary {
       width: 100%;
-      margin-top: 15px;
+      margin-top: 5px;
       background-color: #ff7300;
       color: white;
       border: 2px solid #ff8000;
@@ -35,7 +35,7 @@
     }
     .btn-secondary {
       width: 100%;
-      margin-top: 15px;
+      margin-top: 10px;
       background-color: white;
       color: #ff7300;
       border: 2px solid #ff8000;
@@ -55,6 +55,7 @@
       padding: 10px;
       border-radius: 5px;
       border: 2px solid #ff8000;
+      margin-top: 15px;
       cursor: pointer;
     }
     .custom-label:hover {
@@ -73,10 +74,10 @@
   <h1 class="text-center mb-4">PalateMap</h1>
   <form method="post" enctype="multipart/form-data">
     <div class="form-group">
-      <label class="custom-label" for="fileInput">Take a Photo</label>
+      <label class="custom-label" for="fileInput">Take Photo of Menu</label>
       <input type="file" class="form-control-file" name="file" id="fileInput" accept="image/*" capture="camera" required>
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
+    <button type="submit" class="btn btn-primary">Upload Photo</button>
     <p class="hidden-text" id="menuUpdatedText">Menu Updated</p>
   </form>
 </div>
