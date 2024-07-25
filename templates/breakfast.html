@@ -20,8 +20,23 @@
     }
     .list-group-item {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      background-color: #fff8e1; /* Light yellow */
+      border: 1px solid #ff7300; /* Match button color */
+      border-radius: 5px;
+      margin-bottom: 15px;
+      padding: 15px;
+    }
+    .item-title {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .item-date,
+    .item-rating {
+      font-size: 0.9em;
+      color: #666;
     }
     .btn-primary {
       background-color: #ff7300;
@@ -36,64 +51,88 @@
   <div class="container">
     <h1 class="text-center mb-4">Breakfast Listings</h1>
     <ul id="breakfast-list" class="list-group">
-      <!-- Breakfast items will be populated here -->
+      <li class="list-group-item">
+        <div class="item-title">Waffles</div>
+        <div class="item-date">Date: 2024-07-13</div>
+        <div class="item-rating">Rating: 5.5/10</div>
+        <div class="item-rating">Personal Notes: Way too sweet! Syrup is not something that I like.</div>
+
+      </li>
+      <li class="list-group-item">
+        <div class="item-title">Poached Eggs</div>
+        <div class="item-date">Date: 2024-07-24</div>
+        <div class="item-rating">My Rating: 9/10</div>
+        <div class="item-rating">Personal Notes: Almost perfectly made, I seem to like eggs.</div>
+      </li>
     </ul>
     <button id="add-item" class="btn btn-primary btn-block mt-4">Add New Listing</button>
   </div>
 
-    <!-- Include Firebase JavaScript SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+  <!-- Include Firebase JavaScript SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
 
-    <!-- Import your Firebase config -->
-    <script type="module" src="firebase-config.js"></script>
+  <!-- Import your Firebase config -->
+  <script type="module" src="firebase-config.js"></script>
 
+  <script type="module">
+    import { db, auth } from './firebase-config.js';
 
-    <script type="module">
-        import { db, auth } from './firebase-config.js';
+    document.addEventListener('DOMContentLoaded', async function() {
+      const user = auth.currentUser;
+      if (!user) {
+        alert('Please log in first.');
+        window.location.href = '/login';
+        return;
+      }
 
-        document.addEventListener('DOMContentLoaded', async function() {
-        const user = auth.currentUser;
-        if (!user) {
-            alert('Please log in first.');
-            window.location.href = '/login';
-            return;
+      const userId = user.uid;
+      const breakfastList = document.getElementById('breakfast-list');
+      const addItemButton = document.getElementById('add-item');
+
+      // Fetch and display breakfast listings
+      const querySnapshot = await db.collection('users').doc(userId).collection('breakfast').get();
+      querySnapshot.forEach(doc => {
+        const item = doc.data();
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = `
+          <div class="item-title">${item.name}</div>
+          <div class="item-date">Date: ${new Date(item.date).toLocaleDateString()}</div>
+          <div class="item-rating">Rating: ${item.rating}/5</div>
+        `;
+        breakfastList.appendChild(listItem);
+      });
+
+      // Add new listing
+      addItemButton.addEventListener('click', async function() {
+        const newItem = prompt('Enter new breakfast listing:');
+        const newRating = prompt('Enter rating for the item (1-5):');
+        const dateLogged = new Date().toISOString();
+
+        if (newItem && newRating) {
+          const docRef = await db.collection('users').doc(userId).collection('breakfast').add({
+            name: newItem,
+            date: dateLogged,
+            rating: newRating
+          });
+          const listItem = document.createElement('li');
+          listItem.className = 'list-group-item';
+          listItem.innerHTML = `
+            <div class="item-title">${newItem}</div>
+            <div class="item-date">Date: ${new Date(dateLogged).toLocaleDateString()}</div>
+            <div class="item-rating">Rating: ${newRating}/5</div>
+          `;
+          breakfastList.appendChild(listItem);
         }
+      });
+    });
+  </script>
 
-        const userId = user.uid;
-        const breakfastList = document.getElementById('breakfast-list');
-        const addItemButton = document.getElementById('add-item');
-
-        // Fetch and display breakfast listings
-        const querySnapshot = await db.collection('users').doc(userId).collection('breakfast').get();
-        querySnapshot.forEach(doc => {
-            const item = doc.data();
-            const listItem = document.createElement('li');
-            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-            listItem.textContent = item.name;
-            breakfastList.appendChild(listItem);
-        });
-
-        // Add new listing
-        addItemButton.addEventListener('click', async function() {
-            const newItem = prompt('Enter new breakfast listing:');
-            if (newItem) {
-            await db.collection('users').doc(userId).collection('breakfast').add({
-                name: newItem
-            });
-            const listItem = document.createElement('li');
-            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-            listItem.textContent = newItem;
-            breakfastList.appendChild(listItem);
-            }
-        });
-        });
-    </script>
-
-   <!-- Scripts -->
-   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
