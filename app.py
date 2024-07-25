@@ -100,8 +100,10 @@ def homepage():
             try:
                 eval_menu = MenuEvaluator()
                 dish_dict = eval_menu.evaluate_menu(filepath)
-                
-                # Assuming you have a function or class to rank the menu
+
+                read_menu = ReadMenu()
+                print(read_menu.parseMenu(filepath))
+
                 menuRanker = RankMenu()
                 user_vector = [3, 4, 6, 2, 8, 9]
                 rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
@@ -118,13 +120,13 @@ def allowed_file(filename):
     # Check for allowed file extensions
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'jpg', 'jpeg', 'png'}
 
-@app.route('/userprofile')
-def userprofile():
-    return render_template('userprofile.html')
-
 @app.route('/breakfast')
 def breakfast():
     return render_template('breakfast.html')
+
+@app.route('/userprofile')
+def userprofile():
+    return render_template('userprofile.html')
 
 @app.route('/result')
 def result():
