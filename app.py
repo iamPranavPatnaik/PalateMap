@@ -84,9 +84,11 @@ def register():
 def homepage():
     if request.method == 'POST':
         if 'file' not in request.files:
+            flash("No file part", "danger")
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
+            flash("No selected file", "danger")
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
