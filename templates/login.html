@@ -46,7 +46,6 @@
 <body>
 <div class="container">
   <h1 class="text-center">Login</h1>
-  <!-- Need this to show the errors properly apparently -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="alert alert-{{ messages[0][0] }}" role="alert">

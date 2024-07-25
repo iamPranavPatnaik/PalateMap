@@ -19,41 +19,18 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 cred = credentials.Certificate('palatemapfirebase.json')
 firebase_admin.initialize_app(cred)
 
-# No way ts works
 app.secret_key = os.urandom(24)  # Generates a random key
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def perform_ocr(filepath):
-    # Placeholder for OCR function; implement as needed
     img = Image.open(filepath)
     text = pytesseract.image_to_string(img)
     return text
 
-@app.route('/', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
-            
-            file.save(filepath)
-            eval_menu = MenuEvaluator()
-            dish_dict = eval_menu.evaluate_menu(filepath)
-
-            # Rank all dishes based on vector distances
-            menuRanker = RankMenu()
-            user_vector = [3, 4, 6, 2, 8, 9]
-            menuRanker.rankMenu(user_vector, dish_dict)
-
-            return render_template('result.html', text=dish_vectors, image_url=filepath)  # Update as needed
+@app.route('/')
+def index():
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,7 +47,7 @@ def login():
             
             user = auth.get_user_by_email(email)
             flash("Login successful!", "success")
-            return redirect(url_for('userprofile'))  # Redirect to user profile after login
+            return redirect(url_for('homepage'))  # Redirect to homepage after login
         
         except ValueError as ve:
             flash(f"Input Error: {str(ve)}", "danger")
@@ -93,7 +70,6 @@ def register():
             flash("Email and password are required.", "danger")
             return redirect(url_for('register'))
 
-        # Handle registration logic here (e.g., create a new user)
         try:
             user = auth.create_user(email=email, password=password)
             flash("Registration successful! Please log in.", "success")
@@ -104,17 +80,36 @@ def register():
             flash(f"Registration failed: {str(e)}", "danger")
     return render_template('register.html')
 
-@app.route('/homepage')
+@app.route('/homepage', methods=['GET', 'POST'])
 def homepage():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            eval_menu = MenuEvaluator()
+            dish_dict = eval_menu.evaluate_menu(filepath)
+
+            menuRanker = RankMenu()
+            user_vector = [3, 4, 6, 2, 8, 9]
+            rankedMenu = menuRanker.rankMenu(user_vector, dish_dict)
+
+            return render_template('result.html', text=rankedMenu, image_url=filepath)
     return render_template('homepage.html')
 
 @app.route('/userprofile')
 def userprofile():
     return render_template('userprofile.html')
 
-@app.route('/index')
-def index():
-    return render_template('index.html')
+@app.route('/result')
+def result():
+    return render_template('result.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

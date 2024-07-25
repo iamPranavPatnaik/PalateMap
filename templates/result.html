@@ -3,43 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Menu Result</title>
+  <title>Menu Evaluation Results</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f8f9fa;
-    }
-    .container {
-      max-width: 700px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .btn-secondary {
-      width: 100%;
-    }
-    .text-center img {
-      max-width: 100%;
-      height: auto;
-    }
-  </style>
 </head>
 <body>
-<div class="container">
-  <h1 class="text-center mb-4">Menu Result</h1>
-  <div class="text-center">
-    <img src="{{ image_url }}" class="img-fluid mb-4" alt="Uploaded Image">
+  <div class="container">
+    <h1 class="text-center mb-4">Menu Evaluation Results</h1>
+    <img src="{{ image_url }}" alt="Uploaded Image" class="img-fluid">
+    <pre>{{ text }}</pre>
   </div>
-  <div class="mt-4">
-    <h3>Extracted Text:</h3>
-    <p>{{ text }}</p>
-    <a href="/" class="btn btn-secondary mt-3">Upload Another Menu!</a>
-  </div>
-</div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

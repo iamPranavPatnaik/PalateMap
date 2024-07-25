@@ -21,7 +21,6 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      margin: 40px auto; /* Adjust top and bottom margins */
     }
     .btn-primary {
       width: 100%;
@@ -102,10 +101,10 @@
     <a class="nav-link" href="/homepage">🏠</a>
     <a class="nav-link" href="/userprofile">👤</a>
   </nav>
-  
+
   <div class="container">
     <h1 class="text-center mb-4">PalateMap</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" action="/upload">
       <div class="form-group">
         <label class="custom-label" for="fileInput">Take Photo of Menu</label>
         <input type="file" class="form-control-file" name="file" id="fileInput" accept="image/*" capture="camera" required>
