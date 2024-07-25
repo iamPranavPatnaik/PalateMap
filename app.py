@@ -33,11 +33,13 @@ def upload_file():
             filename = secure_filename(file.filename)
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
-            readMenu = ReadMenu()
-            user_menu = readMenu.parseMenu(menu)
+            
             eval_menu = MenuEvaluator()
-            dish_vectors = eval_menu.evaluate_menu(filepath)
-            return render_template('result.html', text=dish_vectors, image_url=filepath) # CHANGE THIS CHANGE THIS CHANGE THIS
+            dish_dict = eval_menu.evaluate_menu(filepath) # List of all dish vectors
+            user_menu = dish_dict.keys()
+            dish_vectors = dish_dict.values()
+
+            return render_template('result.html', text=dish_vectors, image_url=filepath) # CHANGE THIS CHANGE THIS CHANGE THIS TO SORTED USER_MENU
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])

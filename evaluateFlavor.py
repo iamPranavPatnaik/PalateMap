@@ -39,4 +39,5 @@ class FlavorEvaluator:
         )
         
         response = completion.choices[0].message.content
-        return response
+        response_list = [int(x) for x in response.split(",")]
+        return response_list
